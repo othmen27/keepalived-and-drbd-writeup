@@ -8,3 +8,7 @@ it implements a simple **2-node High Availability (HA) cluster** using:
 
 ---
 
+## What I did
+
+> This section documents the exact steps I performed to build the DRBD + Keepalived HA cluster.
+> For each step I include the commands I ran, what to check, and a placeholder for a screenshot.

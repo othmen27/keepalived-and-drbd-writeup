@@ -1,0 +1,89 @@
+# ---- VISUAL STUDIO CODE ----
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ---- OS TRASH ----
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS (in case you work with Mac users)
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ---- GIT ----
+.git/
+.gitconfig
+*.orig
+
+# ---- NODE.JS ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-store/
+
+# ---- PYTHON ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+env/
+venv/
+
+# ---- C / C++ ----
+*.exe
+*.out
+*.o
+*.obj
+*.dll
+*.lib
+*.so
+*.a
+
+# ---- LOGS ----
+*.log
+logs/
+debug.log
+error.log
+
+# ---- ENVIRONMENT FILES ----
+.env
+.env.local
+.env.*.local
+
+# ---- TEMP FILES ----
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+# ---- IDEs & EDITORS ----
+# JetBrains
+.idea/
+
+# Vim
+*.swp
+*.swo
+
+# ---- COMPILERS / BUILD TOOLS ----
+cache/
+build/
+out/
+bin/
