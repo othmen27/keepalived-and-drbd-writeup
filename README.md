@@ -12,3 +12,9 @@ it implements a simple **2-node High Availability (HA) cluster** using:
 
 > This section documents the exact steps I performed to build the DRBD + Keepalived HA cluster.
 > For each step I include the commands I ran, what to check, and a placeholder for a screenshot.
+
+### 1 - Preparation
+
+What I did here is basically set up a custom network adapter in order for the DRBD to run and operate smoothly like shown in the screenshot bellow
+
+[Custom network adapter image](screenshots/first.png)
