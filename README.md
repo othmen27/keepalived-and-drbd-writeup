@@ -83,7 +83,42 @@ common {
     }
 }
 ```
+**On both nodes**
+
 like this:
 
 ![conf1](screenshots/15.png)
 ![conf2](screenshots/16.png)
+
+And then i created **r0.res** file inside **/etc/drbd.d/** directory and added the following content:
+
+```
+resource r0 {
+    on drbd-node1 {
+        device      /dev/drbd0;
+        disk        /dev/sdb1;
+        address     10.0.0.1:7789;
+        meta-disk   internal;
+    }
+    on drbd-node2 {
+        device      /dev/drbd0;
+        disk        /dev/sdb1;
+        address     10.0.0.2:7789;
+        meta-disk   internal;
+    }
+}
+```
+**I did this on both nodes**
+
+After I was done with editing the **conf** files i run the following command on both nodes: **drbdadm create-md r0** to create the metadata for the DRBD with the name r0. And then I run **drbdadm up r0** on both nodes in order to activate the resource. And i checked the state by running 
+**drbdadm status r0** like shown below
+
+![drState1](screenshots/17.png)
+![drState2](screenshots/18.png)
+
+We notice from both screenshots that both nodes are secondary we're gonna fix that by simply running the following command 
+**drbdadm primary --force r0** and verify again
+
+![drState3](screenshots/19.png)
+
+Good now that it's "primary" we can move forward.
