@@ -15,6 +15,21 @@ it implements a simple **2-node High Availability (HA) cluster** using:
 
 ### 1 - Preparation
 
-What I did here is basically set up a custom network adapter in order for the DRBD to run and operate smoothly like shown in the screenshot bellow
+What I did here is I set up both computers to have a NAT network connection in the same network.
+And then I basically set up a custom network adapter in order for the DRBD to run and operate smoothly like shown in the screenshot below:
 
 ![Custom network adapter image](screenshots/first.png)
+
+After that i added that network adapter to both computers like shown below:
+
+![Network adapter](screenshots/third.png)
+![Network adapter2](screenshots/second.png)
+
+After that i checked if both interfaces are up and running by simply using **ip a**
+
+![Interface1](screenshots/forth.png)
+![Interface2](screenshots/fifth.png)
+
+Then i simply checked the connectivity between computers by simply running **ping (ipaddress)**
+
+![Ping](screenshots/seventh.png)
