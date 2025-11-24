@@ -17,4 +17,4 @@ it implements a simple **2-node High Availability (HA) cluster** using:
 
 What I did here is basically set up a custom network adapter in order for the DRBD to run and operate smoothly like shown in the screenshot bellow
 
-[Custom network adapter image](screenshots/first.png)
+![Custom network adapter image](screenshots/first.png)
