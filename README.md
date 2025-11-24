@@ -6,6 +6,8 @@ it implements a simple **2-node High Availability (HA) cluster** using:
 - **Keepalived** (VRRP) for Virtual IP failover
 - **Nginx** to show which node is currently active and to share local files
 
+(Project link)[http://n.grassa.free.fr/TD_admin/TP_DRBD_KEEPALIVED.pdf]
+
 ---
 
 ## What I did
@@ -35,14 +37,14 @@ Then I simply checked the connectivity between computers by simply running **pin
 ![Ping](screenshots/seventh.png)
 
 Next I made new user with the following names:
--server1
--server2
+- server1
+- server2
 
 ![Added user](screenshots/8.png)
 
 Then i rename the hosts like this:
--drbd-node1
--drbd-node2
+- drbd-node1
+- drbd-node2
 
 ![Hostname](screenshots/9.png)
 
@@ -60,4 +62,28 @@ Afterwards i added the domain of each computer in the other's **/etc/hosts** lik
 
 After all that is complete we can finally take our first step into the project.
 
+---
+
 ## 1 - Setting up DRBD
+
+Here i started with simply formatting the disk **sbd** by running the command **sudo fdisk /dev/sdb** then i followed the guide shown in the document provided by my professor by pressing n->p->l->enter->enter->w.
+Afterwards i installed the package drbd-utils by simply running **apt install -y drbd-utils**.
+Once the download is complete i run **modprobe drbd** to load the module DRBD. and verified if it's running by running **lsmod | grep drbd** like shown below:
+
+![lsmod](screenshots/14.png)
+
+So knowing that the module is up and running we can now start by configuring the **.conf** files, i run the following command **vim /etc/drbd.d/global_common.conf** and added the following 
+```
+global {
+    usage - count no ;
+}
+common {
+    net {
+        protocol C;
+    }
+}
+```
+like this:
+
+![conf1](screenshots/15.png)
+![conf2](screenshots/16.png)
