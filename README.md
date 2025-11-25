@@ -6,7 +6,7 @@ it implements a simple **2-node High Availability (HA) cluster** using:
 - **Keepalived** (VRRP) for Virtual IP failover
 - **Nginx** to show which node is currently active and to share local files
 
-(Project link)[http://n.grassa.free.fr/TD_admin/TP_DRBD_KEEPALIVED.pdf]
+[Project link](http://n.grassa.free.fr/TD_admin/TP_DRBD_KEEPALIVED.pdf)
 
 ---
 
