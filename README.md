@@ -121,4 +121,21 @@ We notice from both screenshots that both nodes are secondary we're gonna fix th
 
 ![drState3](screenshots/19.png)
 
-Good now that it's "primary" we can move forward.
+Good now that it's "primary" we can move forward by formatting the device /dev/drbd0 by running **mkfs.ext4 /dev/drbd0** and mounting it on the folder we created **/mnt/r0/** by simply running **mount /dev/drbd0 /mnt/r0/** and we can check if it's not mounted or not by running **df -h | grep drbd** like shown below:
+
+![mounted](screenshots/20.png)
+
+>Note that this step is only done in the first node.
+
+Now we're gonna try and test the drbd by creating random files and changing the primary node to the 2nd node.
+Here we created the following files:
+
+![files](screenshots/21.png)
+
+And then we're gonna unmount the device and changing the current node to a secondary by using the following command **drbdadm secondary r0** and test if we can find the current files in the 2nd node by mounting the device and changing the role to primary like shown below:
+
+![files2](screenshots/22.png)
+
+We can see that the files have been transferred over to the second node.
+
+![files3](screenshots/23.png)
