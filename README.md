@@ -139,3 +139,146 @@ And then we're gonna unmount the device and changing the current node to a secon
 We can see that the files have been transferred over to the second node.
 
 ![files3](screenshots/23.png)
+
+### 2 - Setting up Keepalived
+
+We're gonna start by downloading the **keepalived** package then modify the folder /etc/keepalived/keepalived.conf into this config:
+
+```
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 101
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass secret123
+    }
+
+    virtual_ipaddress {
+        192.168.47.100/24
+    }
+
+    notify_master "/etc/keepalived/master.sh"
+    notify_backup "/etc/keepalived/backup.sh"
+    notify_fault "/etc/keepalived/backup.sh"
+    notify_stop "/etc/keepalived/backup.sh"
+}
+
+```
+> Note this config is for the main node as we need to change the priority to a smaller number for the secondary like this 
+
+```
+vrrp_instance VI_1 {
+    state BACKUP
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass secret123
+    }
+
+    virtual_ipaddress {
+        192.168.47.100/24
+    }
+
+    notify_master "/etc/keepalived/master.sh"
+    notify_backup "/etc/keepalived/backup.sh"
+    notify_fault "/etc/keepalived/backup.sh"
+    notify_stop "/etc/keepalived/backup.sh"
+}
+```
+After adding this config to each node we can then create our shell scripts they are really simple.
+
+master.sh :
+
+```sh
+#!/bin/bash
+
+/bin/echo "$(date) - Devenu MASTER" >> /var/log/keepalived-transitions.log
+
+/bin/sleep 2
+
+/sbin/drbdadm primary r0
+
+/bin/mount /dev/drbd0 /mnt/r0
+
+/bin/echo -e "Subject: Keepalived Failover - MASTER\n\nNode $(hostname) is now MASTER." \
+    | msmtp --from=gmail mariojabri1@gmail.com
+```
+
+backup.sh:
+
+```sh
+#!/bin/bash
+
+/bin/echo "$(date) - Devenu MASTER" >> /var/log/keepalived-transitions.log
+
+/bin/umount /dev/drbd0
+
+/bin/sleep 2
+
+/sbin/drbdadm secondary r0
+
+/bin/echo -e "Subject: Keepalived Failover - BACKUP\n\nNode $(hostname) is now BACKUP." \
+    | msmtp --from=gmail mariojabri1@gmail.com
+
+```
+
+then make the executable by running **chmod +x /etc/keepalived/script.sh** with script being either master or backup.
+Before we jump into the testing we gotta setup the SMTP to send an email it's really simple.
+First we gotta install the msmtp and msmtp-mta packages then modify the **~/.msmtprc** for user specific or **/etc/msmtprc** for global uses in my case my config looks like this:
+
+```
+# Set default account
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+# Gmail account
+account        gmail
+host           smtp.gmail.com
+port           587
+from           EMAIL@EMAIL.com
+user           EMAIL@EMAIL.com
+password       APP_PASSWORD_HERE
+```
+> You gotta use the APP password that you get from your google's account from security pannel.
+
+Now we can jump into testing finally let's enable the keepalived service on startup by running **systemctl enable keepalived** then start it **systemctl start keepalived** (ON BOTH NODES).
+we can now test if the MASTER has the virtual ip in my case 192.168.47.100, let's start by pinging the ip from the MASTER node
+
+![ping](screenshots/24.png)
+
+Good it works let's check the network interface and see if we have the IP on the MASTER node by running **ip a** like below:
+
+![vipIp](screenshots/25.png)
+
+Good it's there now we can test by stopping the service from the first node by running **systemctl stop keepalived** and see if the 2nd node became the master or not.
+
+**First node :**
+
+![firstNOde](screenshots/26.png)
+
+**Second node :**
+
+![secondNode](screenshots/27.png)
+
+**Emails recieved :**
+
+![emails](screenshots/28.png)
+
+### 3 - Conclusion
+
+This project demonstrated the setup of a 2-node High Availability cluster using DRBD and Keepalived. DRBD provided real-time block-level replication, ensuring data consistency between nodes, while Keepalived managed a virtual IP for automatic failover, maintaining service continuity.
+
+Through hands-on configuration, I verified the replication by creating and accessing files across nodes and tested failover scenarios with seamless transitions. Integrating Nginx allowed visual confirmation of the active node, and msmtp enabled automated email notifications for state changes.
+
+Overall, the project provided practical experience in HA clustering, network configuration, and Linux system administration, highlighting how DRBD and Keepalived can be combined to build a reliable and resilient infrastructure for critical services.
